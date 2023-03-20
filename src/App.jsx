@@ -4,46 +4,47 @@ import Card from "./components/Card";
 import Input from "./components/Input";
 import PlaceContentCenter from "./components/PlaceContentCenter";
 import Todo from "./components/Todo";
+import axios from "axios";
 
 export default function App() {
-  // const inputRef = useRef(null);
-  const [name, setName] = useState("");
-  const [online, setOnline] = useState(false);
-  const [scrollPosition, setScrollPosition] = useState(window.scroll);
-  //Jika di panggil maka setiap klik akan manambah
+  const [loading, setLoading] = useState(false);
+  const [users, setUsers] = useState([]);
   useEffect(() => {
-    // console.log("I always remember");
-  });
-  //Jika dipanggil maka nilai tidak akan bertambah(hanya satu kali dipanggil)
-  useEffect(() => {
-    // console.log("first render");
-  }, []);
-  //Jika dipanggil maka jika di klik pada perubahan baru berubah
-  useEffect(() => {
-    // console.log("I am offline");
-  }, [online]);
-
-  function updateScrollPosition() {
-    const windowScrolling = window.scrollY;
-    console.log(`Window scroll position: ${windowScrolling}`);
-    setScrollPosition(windowScrolling);
-  }
-
-  useEffect(() => {
-    window.addEventListener("scroll", updateScrollPosition);
-    return () => {
-      window.removeEventListener("scroll", updateScrollPosition);
-    };
+    async function getUsers() {
+      setLoading(true);
+      try {
+        const { data } = await axios(
+          "https://jsonplaceholder.typicode.com/users"
+        );
+        setUsers(data);
+        setLoading(false);
+      } catch (error) {
+        console.log("Something went wrong");
+        setLoading(false);
+      }
+    }
+    getUsers().then((r) => r);
   }, []);
 
   return (
     <PlaceContentCenter>
-      <div className={"h-[4000px]"}>
-        <Input value={name} onChange={(e) => setName(e.target.value)} />
-        <Button onClick={() => setOnline((online) => !online)}>
-          Set Online
-        </Button>
-      </div>
+      <Card>
+        <Card.Title>Users: {users.length}</Card.Title>
+        <Card.Body>
+          {loading ? (
+            <div>Loading...</div>
+          ) : (
+            <ol>
+              {users.map((user) => (
+                <li key={user.id}>
+                  {user.name} ({user.username})
+                </li>
+              ))}
+            </ol>
+          )}
+        </Card.Body>
+        <Card.Footer></Card.Footer>
+      </Card>
     </PlaceContentCenter>
   );
 }
