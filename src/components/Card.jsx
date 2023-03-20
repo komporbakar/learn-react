@@ -9,17 +9,17 @@ function Card({ children, title, footer }) {
 function Title({ children }) {
   return (
     <div className={" p-4 border-b"}>
-      <h1 className={"text-2xl"}>{children}</h1>
+      <h1 className={"text-2xl text-slate-900"}>{children}</h1>
     </div>
   );
 }
 
 function Body({ children }) {
-  return <div className={"leading-relaxed p-4"}>{children}</div>;
+  return <div className={"leading-relaxed p-4 text-slate-900"}>{children}</div>;
 }
 
 function Footer({ children }) {
-  return <div className={"bg-slate-50 p-4"}>{children}</div>;
+  return <div className={"bg-slate-50 text-slate-900 p-4"}>{children}</div>;
 }
 
 Card.Title = Title;
